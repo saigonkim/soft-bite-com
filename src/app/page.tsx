@@ -1,66 +1,34 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div>
+      <h1>오늘의 부드러운 추천식</h1>
+      <p style={{ fontSize: "var(--font-size-xl)", marginBottom: "var(--spacing-6)" }}>
+        씹고 삼키기 편안한 맞춤형 식사를 제안합니다.
+      </p>
+      
+      <div style={{
+        backgroundColor: "var(--color-primary-light)",
+        padding: "var(--spacing-6)",
+        borderRadius: "var(--radius-lg)",
+        marginBottom: "var(--spacing-8)",
+        border: "2px solid var(--color-primary)"
+      }}>
+        <h2>내게 맞는 식사 단계 찾기</h2>
+        <p>현재 삼킴 상태에 맞는 IDDSI 단계를 확인해보세요.</p>
+        <button style={{
+          backgroundColor: "var(--color-primary)",
+          color: "white",
+          padding: "var(--spacing-3) var(--spacing-6)",
+          fontSize: "var(--font-size-lg)",
+          fontWeight: "bold",
+          border: "none",
+          borderRadius: "var(--radius-md)",
+          cursor: "pointer",
+          marginTop: "var(--spacing-2)"
+        }}>
+          자가 진단 시작하기
+        </button>
+      </div>
     </div>
   );
 }
