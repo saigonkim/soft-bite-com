@@ -118,6 +118,24 @@ h3 { font-size: var(--font-size-xl); }
   padding: 0 var(--spacing-4);
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-3);
+  }
+  
+  /* Slightly tighten spacing on mobile without shrinking fonts */
+  :root {
+    --spacing-8: 1.5rem;
+    --spacing-10: 2rem;
+  }
+  
+  /* Ensure form elements and buttons span full width for easy tapping */
+  select, input, textarea, button {
+    width: 100%;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
