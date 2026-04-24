@@ -13,18 +13,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body>
-        <header style={headerStyle}>
-          <div className="container" style={headerContainerStyle}>
-            <Link href="/" style={logoStyle}>
+        <header className="header">
+          <div className="container headerContainer">
+            <Link href="/" className="logo">
               든든한 한입
             </Link>
-            <nav style={navStyle}>
-              <Link href="/recipes" style={navLinkStyle}>단계별 레시피</Link>
-              <Link href="/guide" style={navLinkStyle}>식재료 가이드</Link>
-              <Link href="/community" style={navLinkStyle}>환우 커뮤니티</Link>
-              <Link href="/mykitchen" style={navLinkStyle}>마이 키친</Link>
+            <nav className="nav">
+              <Link href="/recipes" className="navLink">단계별 레시피</Link>
+              <Link href="/guide" className="navLink">식재료 가이드</Link>
+              <Link href="/community" className="navLink">환우 커뮤니티</Link>
+              <Link href="/mykitchen" className="navLink">마이 키친</Link>
             </nav>
           </div>
         </header>
@@ -40,38 +40,6 @@ export default function RootLayout({
     </html>
   );
 }
-
-const headerStyle = {
-  backgroundColor: "var(--color-surface)",
-  borderBottom: "1px solid var(--color-border)",
-  padding: "var(--spacing-4) 0",
-};
-
-const headerContainerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  flexWrap: "wrap" as const,
-  gap: "var(--spacing-4)",
-};
-
-const logoStyle = {
-  fontSize: "var(--font-size-2xl)",
-  fontWeight: "bold",
-  color: "var(--color-primary)",
-};
-
-const navStyle = {
-  display: "flex",
-  gap: "var(--spacing-6)",
-  flexWrap: "wrap" as const,
-};
-
-const navLinkStyle = {
-  fontSize: "var(--font-size-lg)",
-  fontWeight: "bold",
-  color: "var(--color-text-primary)",
-};
 
 const footerStyle = {
   backgroundColor: "var(--color-surface)",

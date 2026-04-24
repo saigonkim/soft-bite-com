@@ -118,21 +118,97 @@ h3 { font-size: var(--font-size-xl); }
   padding: 0 var(--spacing-4);
 }
 
+/* Header & Nav */
+.header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-4) 0;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: var(--font-size-2xl);
+  font-weight: bold;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: center;
+}
+
+.navLink {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  padding: var(--spacing-2) 0;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--spacing-3);
   }
   
-  /* Slightly tighten spacing on mobile without shrinking fonts */
   :root {
     --spacing-8: 1.5rem;
     --spacing-10: 2rem;
   }
   
-  /* Ensure form elements and buttons span full width for easy tapping */
   select, input, textarea, button {
     width: 100%;
+  }
+
+  /* Header adjustments for mobile */
+  .headerContainer {
+    flex-direction: column;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+  }
+
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    gap: var(--spacing-4);
+    /* Hide scrollbar for a cleaner look */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    padding-bottom: var(--spacing-1);
+  }
+  
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .navLink {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Grid Layouts */
+.grid-3-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (min-width: 768px) {
+  .grid-3-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-3-col {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
