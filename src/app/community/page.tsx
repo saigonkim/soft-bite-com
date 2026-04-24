@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
-import type { User } from '@supabase/supabase-js';
+import type { User, AuthChangeEvent } from '@supabase/supabase-js';
 import Link from 'next/link';
 
 type Comment = {
@@ -222,7 +222,7 @@ export default function CommunityPage() {
     fetchPosts();
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session) => {
       setUser(session?.user || null);
     });
 
