@@ -101,7 +101,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ i
           </div>
         </div>
 
-        <div style={{ backgroundColor: "var(--color-primary-light)", padding: "var(--spacing-4)", borderRadius: "var(--radius-md)", color: "#1E3A8A" }}>
+        <div style={{ backgroundColor: "var(--color-primary-light)", padding: "var(--spacing-4)", borderRadius: "var(--radius-md)", color: "var(--color-text-primary)" }}>
           💡 <strong>대체 식재료 팁:</strong> {recipe.substituteTip}
         </div>
       </div>
