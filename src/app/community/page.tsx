@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
+import Link from 'next/link';
 
 type Comment = {
   id: string;
@@ -21,7 +23,7 @@ type Post = {
   comments?: Comment[];
 };
 
-function PostItem({ post, onUpdate }: { post: Post, onUpdate: () => void }) {
+function PostItem({ post, onUpdate, user }: { post: Post, onUpdate: () => void, user: User | null }) {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes);
   const [showComments, setShowComments] = useState(false);
@@ -82,9 +84,10 @@ function PostItem({ post, onUpdate }: { post: Post, onUpdate: () => void }) {
     if (!newComment.trim()) return;
     setSubmittingComment(true);
 
+    const authorName = user?.user_metadata?.nickname || '익명 환우';
     const { error } = await supabase
       .from('community_comments')
-      .insert([{ post_id: post.id, author: '익명 환우', content: newComment }]);
+      .insert([{ post_id: post.id, author: authorName, content: newComment }]);
 
     if (!error) {
       setNewComment('');
@@ -168,32 +171,39 @@ function PostItem({ post, onUpdate }: { post: Post, onUpdate: () => void }) {
             )}
           </div>
           
-          <form onSubmit={handleAddComment} style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
-            <input 
-              type="text" 
-              placeholder="댓글을 입력하세요..." 
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              style={{ flex: 1, padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
-            />
-            <button 
-              type="submit" 
-              disabled={submittingComment} 
-              style={{ 
-                padding: 'var(--spacing-2) var(--spacing-4)', 
-                backgroundColor: 'var(--color-primary)', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: 'var(--radius-md)', 
-                cursor: submittingComment ? 'not-allowed' : 'pointer',
-                width: 'auto',
-                flexShrink: 0,
-                fontWeight: 'bold'
-              }}
-            >
-              등록
-            </button>
-          </form>
+          {user ? (
+            <form onSubmit={handleAddComment} style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+              <input 
+                type="text" 
+                placeholder="댓글을 입력하세요..." 
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                style={{ flex: 1, padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+              />
+              <button 
+                type="submit" 
+                disabled={submittingComment} 
+                style={{ 
+                  padding: 'var(--spacing-2) var(--spacing-4)', 
+                  backgroundColor: 'var(--color-primary)', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: 'var(--radius-md)', 
+                  cursor: submittingComment ? 'not-allowed' : 'pointer',
+                  width: 'auto',
+                  flexShrink: 0,
+                  fontWeight: 'bold'
+                }}
+              >
+                등록
+              </button>
+            </form>
+          ) : (
+            <div style={{ textAlign: 'center', padding: 'var(--spacing-4)', backgroundColor: 'var(--color-surface-hover)', borderRadius: 'var(--radius-md)' }}>
+              <p style={{ margin: '0 0 var(--spacing-2) 0', color: 'var(--color-text-muted)' }}>로그인 후 댓글을 작성할 수 있습니다.</p>
+              <Link href="/mykitchen" style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>로그인하러 가기</Link>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -206,10 +216,23 @@ export default function CommunityPage() {
   const [showForm, setShowForm] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     fetchPosts();
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user || null);
+  };
 
   const fetchPosts = async () => {
     const { data, error } = await supabase
@@ -228,9 +251,11 @@ export default function CommunityPage() {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
+    const authorName = user?.user_metadata?.nickname || '익명 환우';
+
     const { error } = await supabase
       .from('community_posts')
-      .insert([{ author: '익명 환우', title: newTitle, content: newContent }]);
+      .insert([{ author: authorName, title: newTitle, content: newContent }]);
 
     if (!error) {
       setNewTitle('');
@@ -270,33 +295,45 @@ export default function CommunityPage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handlePost} style={{ backgroundColor: 'var(--color-surface)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-6)' }}>
-          <div style={{ marginBottom: 'var(--spacing-3)' }}>
-            <input 
-              type="text" 
-              placeholder="제목을 입력하세요" 
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              style={{ width: '100%', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
-            />
+        user ? (
+          <form onSubmit={handlePost} style={{ backgroundColor: 'var(--color-surface)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-6)' }}>
+            <div style={{ marginBottom: 'var(--spacing-3)' }}>
+              <input 
+                type="text" 
+                placeholder="제목을 입력하세요" 
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                required
+                style={{ width: '100%', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+              />
+            </div>
+            <div style={{ marginBottom: 'var(--spacing-3)' }}>
+              <textarea 
+                placeholder="내용을 입력하세요" 
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                required
+                style={{ width: '100%', minHeight: '100px', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+              />
+            </div>
+            <button type="submit" style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: 'var(--spacing-2) var(--spacing-4)', borderRadius: 'var(--radius-md)', border: 'none', cursor: 'pointer' }}>
+              등록하기
+            </button>
+          </form>
+        ) : (
+          <div style={{ textAlign: 'center', backgroundColor: 'var(--color-surface)', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-6)' }}>
+            <h3 style={{ margin: '0 0 var(--spacing-2) 0' }}>로그인이 필요합니다</h3>
+            <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-4)' }}>커뮤니티 글쓰기는 로그인 후 이용하실 수 있습니다.</p>
+            <Link href="/mykitchen" style={{ display: 'inline-block', backgroundColor: 'var(--color-primary)', color: 'white', padding: 'var(--spacing-2) var(--spacing-4)', borderRadius: 'var(--radius-md)', textDecoration: 'none', fontWeight: 'bold' }}>
+              로그인하러 가기
+            </Link>
           </div>
-          <div style={{ marginBottom: 'var(--spacing-3)' }}>
-            <textarea 
-              placeholder="내용을 입력하세요" 
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
-              style={{ width: '100%', minHeight: '100px', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
-            />
-          </div>
-          <button type="submit" style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: 'var(--spacing-2) var(--spacing-4)', borderRadius: 'var(--radius-md)', border: 'none', cursor: 'pointer' }}>
-            등록하기
-          </button>
-        </form>
+        )
       )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-4)" }}>
         {loading ? <p>로딩 중...</p> : posts.map(post => (
-          <PostItem key={post.id} post={post} onUpdate={fetchPosts} />
+          <PostItem key={post.id} post={post} onUpdate={fetchPosts} user={user} />
         ))}
         {!loading && posts.length === 0 && <p style={{ color: 'var(--color-text-muted)' }}>등록된 게시글이 없습니다.</p>}
       </div>

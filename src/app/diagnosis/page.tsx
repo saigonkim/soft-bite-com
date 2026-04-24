@@ -60,6 +60,14 @@ export default function DiagnosisPage() {
       setCurrentStep(currentStep + 1);
     } else {
       setIsFinished(true);
+      // Immediately calculate and save to localStorage
+      const newScores = [...scores];
+      newScores[currentStep] = score; // Ensure the last score is included
+      const totalScore = newScores.reduce((a, b) => a + b, 0);
+      let level = "레벨 4 이상";
+      if (totalScore < 6) level = "레벨 1~2";
+      else if (totalScore < 10) level = "레벨 3";
+      localStorage.setItem('iddsi_level', level);
     }
   };
 

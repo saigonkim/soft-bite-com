@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
+import Link from 'next/link';
 
 type Comment = {
   id: string;
@@ -19,10 +21,23 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
   const [thickener, setThickener] = useState('사용안함');
   const [temperature, setTemperature] = useState('#따뜻하게');
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     fetchComments();
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
   }, [recipeId]);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user || null);
+  };
 
   const fetchComments = async () => {
     const { data, error } = await supabase
@@ -43,12 +58,16 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
     if (!content.trim()) return;
     setLoading(true);
 
+    const authorName = user?.user_metadata?.nickname || '익명 환우';
+    const finalTags = mode === 'tip' ? [temperature] : [];
+    finalTags.push(`AUTHOR:${authorName}`);
+
     const newComment = {
-      user_id: '00000000-0000-0000-0000-000000000000', // Dummy UUID for now
+      user_id: user ? user.id : '00000000-0000-0000-0000-000000000000',
       recipe_id: recipeId,
       thickener_ratio: mode === 'tip' ? thickener : null,
       custom_tip: content,
-      tags: mode === 'tip' ? [temperature] : []
+      tags: finalTags
     };
 
     const { error } = await supabase
@@ -148,25 +167,32 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button 
-            type="submit" 
-            disabled={loading || !content.trim()}
-            style={{ 
-              backgroundColor: 'var(--color-primary)', 
-              color: 'white', 
-              padding: 'var(--spacing-3) var(--spacing-6)', 
-              fontSize: 'var(--font-size-base)', 
-              fontWeight: 'bold', 
-              border: 'none', 
-              borderRadius: 'var(--radius-md)', 
-              cursor: (loading || !content.trim()) ? 'not-allowed' : 'pointer',
-              opacity: (loading || !content.trim()) ? 0.6 : 1
-            }}
-          >
-            {loading ? '등록 중...' : '등록하기'}
-          </button>
-        </div>
+        {user ? (
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button 
+              type="submit" 
+              disabled={loading || !content.trim()}
+              style={{ 
+                backgroundColor: 'var(--color-primary)', 
+                color: 'white', 
+                padding: 'var(--spacing-3) var(--spacing-6)', 
+                fontSize: 'var(--font-size-base)', 
+                fontWeight: 'bold', 
+                border: 'none', 
+                borderRadius: 'var(--radius-md)', 
+                cursor: (loading || !content.trim()) ? 'not-allowed' : 'pointer',
+                opacity: (loading || !content.trim()) ? 0.6 : 1
+              }}
+            >
+              {loading ? '등록 중...' : '등록하기'}
+            </button>
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center', backgroundColor: 'var(--color-surface-hover)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
+            <p style={{ margin: '0 0 var(--spacing-2) 0', color: 'var(--color-text-muted)' }}>로그인 후 응원의 한마디와 팁을 남길 수 있습니다.</p>
+            <Link href="/mykitchen" style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>로그인하러 가기</Link>
+          </div>
+        )}
       </form>
 
       {/* Review List */}
@@ -174,38 +200,44 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
         {comments.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: 'var(--spacing-6)' }}>아직 등록된 글이 없습니다. 첫 번째로 글을 남겨주세요!</p>
         ) : (
-          comments.map(comment => (
-            <div key={comment.id} style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--color-surface)' }}>
-              {comment.thickener_ratio && (
-                <div style={{ display: 'flex', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)', flexWrap: 'wrap' }}>
-                  <span style={{ backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
-                    💡 조리 팁
-                  </span>
-                  <span style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
-                    점도증진제: {comment.thickener_ratio}
-                  </span>
-                  {comment.tags?.map(tag => (
-                    <span key={tag} style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
-                      {tag}
+          comments.map(comment => {
+            const authorTag = comment.tags?.find(t => t.startsWith('AUTHOR:'));
+            const displayAuthor = authorTag ? authorTag.replace('AUTHOR:', '') : '익명 환우';
+            const displayTags = comment.tags?.filter(t => !t.startsWith('AUTHOR:')) || [];
+
+            return (
+              <div key={comment.id} style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--color-surface)' }}>
+                {comment.thickener_ratio && (
+                  <div style={{ display: 'flex', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)', flexWrap: 'wrap' }}>
+                    <span style={{ backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
+                      💡 조리 팁
                     </span>
-                  ))}
+                    <span style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
+                      점도증진제: {comment.thickener_ratio}
+                    </span>
+                    {displayTags.map(tag => (
+                      <span key={tag} style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {!comment.thickener_ratio && (
+                  <div style={{ marginBottom: 'var(--spacing-3)' }}>
+                    <span style={{ backgroundColor: '#FEE2E2', color: '#991B1B', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
+                      💖 응원
+                    </span>
+                  </div>
+                )}
+                <p style={{ fontSize: 'var(--font-size-base)', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.6, color: 'var(--color-text-primary)' }}>
+                  {comment.custom_tip}
+                </p>
+                <div style={{ marginTop: 'var(--spacing-3)', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textAlign: 'right' }}>
+                  {displayAuthor} • {new Date(comment.created_at).toLocaleDateString()}
                 </div>
-              )}
-              {!comment.thickener_ratio && (
-                <div style={{ marginBottom: 'var(--spacing-3)' }}>
-                  <span style={{ backgroundColor: '#FEE2E2', color: '#991B1B', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
-                    💖 응원
-                  </span>
-                </div>
-              )}
-              <p style={{ fontSize: 'var(--font-size-base)', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.6, color: 'var(--color-text-primary)' }}>
-                {comment.custom_tip}
-              </p>
-              <div style={{ marginTop: 'var(--spacing-3)', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textAlign: 'right' }}>
-                익명 환우 • {new Date(comment.created_at).toLocaleDateString()}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

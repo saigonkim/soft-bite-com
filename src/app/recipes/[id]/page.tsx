@@ -1,4 +1,5 @@
 import CommentsSection from '@/components/CommentsSection';
+import ScrapButton from '@/components/ScrapButton';
 import { recipes } from '@/data/recipes';
 import { notFound } from 'next/navigation';
 
@@ -166,9 +167,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ i
             {recipe.epilogue}
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: "var(--spacing-4)", flexWrap: "wrap" }}>
-            <button style={{ padding: "10px 20px", backgroundColor: "var(--color-surface-hover)", color: "var(--color-text-primary)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-full)", cursor: "pointer", fontWeight: "bold" }}>
-              🔖 스크랩하기
-            </button>
+            <ScrapButton recipe={recipe} />
             <button style={{ padding: "10px 20px", backgroundColor: "#FEE500", color: "#371D1E", border: "none", borderRadius: "var(--radius-full)", cursor: "pointer", fontWeight: "bold" }}>
               💬 카카오톡 공유
             </button>
