@@ -115,7 +115,21 @@ h3 { font-size: var(--font-size-xl); }
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-4);
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+/* Main Content Layout */
+.mainContent {
+  padding: var(--spacing-8) var(--spacing-4);
+  min-height: 80vh;
+  margin-top: 80px;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-top: 130px;
+  }
 }
 
 /* Header & Nav */
@@ -123,6 +137,11 @@ h3 { font-size: var(--font-size-xl); }
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   padding: var(--spacing-4) 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 .headerContainer {
@@ -155,7 +174,8 @@ h3 { font-size: var(--font-size-xl); }
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .container {
-    padding: 0 var(--spacing-3);
+    padding-left: var(--spacing-3);
+    padding-right: var(--spacing-3);
   }
   
   :root {
@@ -167,10 +187,18 @@ h3 { font-size: var(--font-size-xl); }
     width: 100%;
   }
 
+  .mainContent {
+    margin-top: 160px;
+  }
+
   /* Header adjustments for mobile */
+  .header {
+    padding: var(--spacing-2) 0;
+  }
+
   .headerContainer {
     flex-direction: column;
-    gap: var(--spacing-3);
+    gap: var(--spacing-2);
     align-items: flex-start;
   }
 
@@ -182,6 +210,7 @@ h3 { font-size: var(--font-size-xl); }
     scrollbar-width: none; 
     -ms-overflow-style: none;
     padding-bottom: var(--spacing-1);
+    justify-content: flex-start;
   }
   
   .nav::-webkit-scrollbar {
@@ -190,6 +219,7 @@ h3 { font-size: var(--font-size-xl); }
   
   .navLink {
     font-size: var(--font-size-base);
+    flex-shrink: 0;
   }
 }
 
@@ -212,6 +242,24 @@ h3 { font-size: var(--font-size-xl); }
   }
 }
 
+.grid-4-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (min-width: 768px) {
+  .grid-4-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-4-col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -222,4 +270,32 @@ h3 { font-size: var(--font-size-xl); }
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Diagnosis Option Buttons */
+.diagnosis-option {
+  padding: var(--spacing-4);
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  text-align: center;
+  width: 100%;
+}
+
+@media (hover: hover) {
+  .diagnosis-option:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    color: #1E3A8A;
+  }
+}
+
+.diagnosis-option:active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: #1E3A8A;
 }

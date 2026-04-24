@@ -97,7 +97,7 @@ export default function DiagnosisPage() {
           </div>
         </div>
         
-        <div style={{ display: "flex", gap: "var(--spacing-4)", justifyContent: "center" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--spacing-4)", justifyContent: "center" }}>
           <button 
             onClick={() => { setCurrentStep(0); setScores(Array(questions.length).fill(0)); setIsFinished(false); }}
             style={{ 
@@ -107,7 +107,9 @@ export default function DiagnosisPage() {
               border: "1px solid var(--color-border)", 
               borderRadius: "var(--radius-md)",
               cursor: "pointer",
-              fontWeight: "bold"
+              fontWeight: "bold",
+              flex: "1 1 140px",
+              width: "100%"
             }}
           >
             다시 하기
@@ -120,7 +122,10 @@ export default function DiagnosisPage() {
             borderRadius: "var(--radius-md)",
             textDecoration: "none",
             fontWeight: "bold",
-            display: "inline-block"
+            display: "inline-block",
+            flex: "1 1 140px",
+            width: "100%",
+            textAlign: "center"
           }}>
             추천 레시피 보기
           </Link>
@@ -156,20 +161,8 @@ export default function DiagnosisPage() {
           {question.options.map((option, idx) => (
             <button 
               key={idx}
+              className="diagnosis-option"
               onClick={() => handleOptionSelect(option.score)}
-              style={{
-                padding: "var(--spacing-4)",
-                backgroundColor: "var(--color-surface-hover)",
-                color: "var(--color-text-primary)",
-                border: "2px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                fontSize: "var(--font-size-lg)",
-                cursor: "pointer",
-                transition: "border-color 0.2s, background-color 0.2s",
-                textAlign: "center" as const
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.borderColor = "var(--color-primary)"; e.currentTarget.style.backgroundColor = "var(--color-primary-light)"; e.currentTarget.style.color = "#1E3A8A"; }}
-              onMouseOut={(e) => { e.currentTarget.style.borderColor = "var(--color-border)"; e.currentTarget.style.backgroundColor = "var(--color-surface-hover)"; e.currentTarget.style.color = "var(--color-text-primary)"; }}
             >
               {option.label}
             </button>
@@ -188,7 +181,9 @@ export default function DiagnosisPage() {
               borderRadius: "var(--radius-md)",
               cursor: currentStep === 0 ? "not-allowed" : "pointer",
               fontWeight: "bold",
-              opacity: currentStep === 0 ? 0.3 : 1
+              opacity: currentStep === 0 ? 0.3 : 1,
+              width: "auto",
+              flexShrink: 0
             }}
           >
             이전

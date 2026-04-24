@@ -14,7 +14,8 @@ type Comment = {
 
 export default function CommentsSection({ recipeId }: { recipeId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [tip, setTip] = useState('');
+  const [mode, setMode] = useState<'cheer' | 'tip'>('cheer');
+  const [content, setContent] = useState('');
   const [thickener, setThickener] = useState('사용안함');
   const [temperature, setTemperature] = useState('#따뜻하게');
   const [loading, setLoading] = useState(false);
@@ -39,14 +40,15 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!content.trim()) return;
     setLoading(true);
 
     const newComment = {
       user_id: '00000000-0000-0000-0000-000000000000', // Dummy UUID for now
       recipe_id: recipeId,
-      thickener_ratio: thickener,
-      custom_tip: tip,
-      tags: [temperature]
+      thickener_ratio: mode === 'tip' ? thickener : null,
+      custom_tip: content,
+      tags: mode === 'tip' ? [temperature] : []
     };
 
     const { error } = await supabase
@@ -55,9 +57,9 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
 
     if (error) {
       console.error('Error adding comment:', error);
-      alert('리뷰 작성에 실패했습니다.');
+      alert('등록에 실패했습니다.');
     } else {
-      setTip('');
+      setContent('');
       fetchComments(); // Refresh list
     }
     setLoading(false);
@@ -65,89 +67,143 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
 
   return (
     <div style={{ marginTop: 'var(--spacing-10)', borderTop: '2px solid var(--color-border)', paddingTop: 'var(--spacing-6)' }}>
-      <h2>환우 리뷰 및 커스텀 팁</h2>
+      <h2 style={{ fontSize: 'var(--font-size-xl)', color: 'var(--color-primary)', marginBottom: 'var(--spacing-6)' }}>환우 소통 공간</h2>
       
       {/* Review Form */}
-      <form onSubmit={handleSubmit} style={{ backgroundColor: 'var(--color-surface)', padding: 'var(--spacing-6)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-8)' }}>
-        <h3 style={{ fontSize: 'var(--font-size-lg)' }}>나만의 조리 옵션 공유하기</h3>
+      <form onSubmit={handleSubmit} style={{ backgroundColor: 'var(--color-surface)', padding: 'var(--spacing-6)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-8)', border: '1px solid var(--color-border)' }}>
         
-        <div style={{ display: 'flex', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-4)', flexWrap: 'wrap' }}>
-          <div>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: 'var(--spacing-2)' }}>점도증진제 비율</label>
-            <select 
-              value={thickener} 
-              onChange={(e) => setThickener(e.target.value)}
-              style={{ fontSize: 'var(--font-size-base)', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)' }}
-            >
-              <option value="사용안함">사용 안 함</option>
-              <option value="1/4포">1/4포</option>
-              <option value="1/2포">1/2포</option>
-              <option value="1포">1포</option>
-            </select>
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: 'var(--spacing-2)' }}>추천 온도</label>
-            <select 
-              value={temperature} 
-              onChange={(e) => setTemperature(e.target.value)}
-              style={{ fontSize: 'var(--font-size-base)', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)' }}
-            >
-              <option value="#따뜻하게">따뜻하게</option>
-              <option value="#실온">실온 (미지근하게)</option>
-              <option value="#차갑게">차갑게</option>
-            </select>
-          </div>
+        <div style={{ display: 'flex', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-6)' }}>
+          <button
+            type="button"
+            onClick={() => setMode('cheer')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-3)',
+              backgroundColor: mode === 'cheer' ? 'var(--color-primary)' : 'var(--color-surface-hover)',
+              color: mode === 'cheer' ? 'white' : 'var(--color-text-primary)',
+              border: mode === 'cheer' ? 'none' : '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-md)',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            응원의 한마디 남기기
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('tip')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-3)',
+              backgroundColor: mode === 'tip' ? 'var(--color-primary)' : 'var(--color-surface-hover)',
+              color: mode === 'tip' ? 'white' : 'var(--color-text-primary)',
+              border: mode === 'tip' ? 'none' : '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-md)',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            나만의 조리 팁 공유하기
+          </button>
         </div>
 
+        {mode === 'tip' && (
+          <div style={{ display: 'flex', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-4)', flexWrap: 'wrap', backgroundColor: 'var(--color-background)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)' }}>
+            <div>
+              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: 'var(--spacing-2)', fontSize: 'var(--font-size-sm)' }}>점도증진제 비율</label>
+              <select 
+                value={thickener} 
+                onChange={(e) => setThickener(e.target.value)}
+                style={{ fontSize: 'var(--font-size-base)', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+              >
+                <option value="사용안함">사용 안 함</option>
+                <option value="1/4포">1/4포</option>
+                <option value="1/2포">1/2포</option>
+                <option value="1포">1포</option>
+              </select>
+            </div>
+            
+            <div>
+              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: 'var(--spacing-2)', fontSize: 'var(--font-size-sm)' }}>추천 온도</label>
+              <select 
+                value={temperature} 
+                onChange={(e) => setTemperature(e.target.value)}
+                style={{ fontSize: 'var(--font-size-base)', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+              >
+                <option value="#따뜻하게">따뜻하게</option>
+                <option value="#실온">실온 (미지근하게)</option>
+                <option value="#차갑게">차갑게</option>
+              </select>
+            </div>
+          </div>
+        )}
+
         <div style={{ marginBottom: 'var(--spacing-4)' }}>
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: 'var(--spacing-2)' }}>미각 변화 대응 팁 (선택)</label>
           <textarea 
-            value={tip}
-            onChange={(e) => setTip(e.target.value)}
-            placeholder="예: 쇠맛이 날 때 레몬즙을 추가하면 좋아요."
-            style={{ width: '100%', minHeight: '100px', fontSize: 'var(--font-size-base)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder={mode === 'cheer' ? "따뜻한 응원이나 감사 인사를 남겨주세요." : "예: 쇠맛이 날 때 레몬즙을 추가하면 좋아요. 이렇게 갈아먹으니 편했어요."}
+            style={{ width: '100%', minHeight: '100px', fontSize: 'var(--font-size-base)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', resize: 'vertical' }}
+            required
           />
         </div>
 
-        <button 
-          type="submit" 
-          disabled={loading}
-          style={{ 
-            backgroundColor: 'var(--color-primary)', 
-            color: 'white', 
-            padding: 'var(--spacing-3) var(--spacing-6)', 
-            fontSize: 'var(--font-size-lg)', 
-            fontWeight: 'bold', 
-            border: 'none', 
-            borderRadius: 'var(--radius-md)', 
-            cursor: loading ? 'not-allowed' : 'pointer' 
-          }}
-        >
-          {loading ? '등록 중...' : '리뷰 등록하기'}
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button 
+            type="submit" 
+            disabled={loading || !content.trim()}
+            style={{ 
+              backgroundColor: 'var(--color-primary)', 
+              color: 'white', 
+              padding: 'var(--spacing-3) var(--spacing-6)', 
+              fontSize: 'var(--font-size-base)', 
+              fontWeight: 'bold', 
+              border: 'none', 
+              borderRadius: 'var(--radius-md)', 
+              cursor: (loading || !content.trim()) ? 'not-allowed' : 'pointer',
+              opacity: (loading || !content.trim()) ? 0.6 : 1
+            }}
+          >
+            {loading ? '등록 중...' : '등록하기'}
+          </button>
+        </div>
       </form>
 
       {/* Review List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
         {comments.length === 0 ? (
-          <p style={{ color: 'var(--color-text-muted)' }}>아직 등록된 팁이 없습니다. 첫 번째로 팁을 공유해주세요!</p>
+          <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: 'var(--spacing-6)' }}>아직 등록된 글이 없습니다. 첫 번째로 글을 남겨주세요!</p>
         ) : (
           comments.map(comment => (
-            <div key={comment.id} style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ display: 'flex', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)', flexWrap: 'wrap' }}>
-                <span style={{ backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', padding: 'var(--spacing-1) var(--spacing-2)', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
-                  점도증진제: {comment.thickener_ratio}
-                </span>
-                {comment.tags?.map(tag => (
-                  <span key={tag} style={{ backgroundColor: 'var(--color-surface-hover)', padding: 'var(--spacing-1) var(--spacing-2)', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
-                    {tag}
+            <div key={comment.id} style={{ border: '1px solid var(--color-border)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--color-surface)' }}>
+              {comment.thickener_ratio && (
+                <div style={{ display: 'flex', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)', flexWrap: 'wrap' }}>
+                  <span style={{ backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
+                    💡 조리 팁
                   </span>
-                ))}
-              </div>
-              <p style={{ fontSize: 'var(--font-size-base)', margin: 0 }}>
-                {comment.custom_tip || '내용이 없습니다.'}
+                  <span style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
+                    점도증진제: {comment.thickener_ratio}
+                  </span>
+                  {comment.tags?.map(tag => (
+                    <span key={tag} style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)' }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {!comment.thickener_ratio && (
+                <div style={{ marginBottom: 'var(--spacing-3)' }}>
+                  <span style={{ backgroundColor: '#FEE2E2', color: '#991B1B', padding: '4px 10px', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-sm)', fontWeight: 'bold' }}>
+                    💖 응원
+                  </span>
+                </div>
+              )}
+              <p style={{ fontSize: 'var(--font-size-base)', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.6, color: 'var(--color-text-primary)' }}>
+                {comment.custom_tip}
               </p>
+              <div style={{ marginTop: 'var(--spacing-3)', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textAlign: 'right' }}>
+                익명 환우 • {new Date(comment.created_at).toLocaleDateString()}
+              </div>
             </div>
           ))
         )}

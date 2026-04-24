@@ -7,6 +7,7 @@ export interface RecipeData {
   id: string;
   title: string;
   level: string;
+  levelBadge?: string;
   image: string;
   author: string;
   date: string;
@@ -33,6 +34,7 @@ export const recipes: RecipeData[] = [
     id: "avocado-milk",
     title: "[초기/레벨1] 아보카도 우유",
     level: "레벨 1",
+    levelBadge: "/images/badge_level1.png",
     image: "/images/avocado_milk.png",
     author: "👨‍🍳 영양사 김환우",
     date: "2026-04-24",
@@ -62,6 +64,7 @@ export const recipes: RecipeData[] = [
     id: "banana-soup",
     title: "[레벨 2] 바나나 크림스프",
     level: "레벨 2",
+    levelBadge: "/images/badge_level2.png",
     image: "/images/banana_cream_soup.png",
     author: "👨‍🍳 영양사 김환우",
     date: "2026-04-24",
@@ -91,6 +94,7 @@ export const recipes: RecipeData[] = [
     id: "tomato-eggplant",
     title: "[레벨 3] 토마토 가지찜",
     level: "레벨 3",
+    levelBadge: "/images/badge_level3.png",
     image: "/images/tomato_eggplant.png",
     author: "👨‍🍳 영양사 김환우",
     date: "2026-04-24",
@@ -118,8 +122,9 @@ export const recipes: RecipeData[] = [
   },
   {
     id: "chicken-potato",
-    title: "[레벨 5] 닭고기 감자전",
-    level: "레벨 5",
+    title: "[레벨 4] 닭고기 감자전",
+    level: "레벨 4",
+    levelBadge: "/images/badge_level4.png",
     image: "/images/chicken_potato_pancake.png",
     author: "👨‍🍳 영양사 김환우",
     date: "2026-04-24",

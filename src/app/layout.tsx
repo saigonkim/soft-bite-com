@@ -28,7 +28,7 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="container" style={{ padding: "var(--spacing-8) var(--spacing-4)", minHeight: "80vh" }}>
+        <main className="container mainContent">
           {children}
         </main>
         <footer style={footerStyle}>
@@ -43,7 +43,7 @@ export default function RootLayout({
 
 const footerStyle = {
   backgroundColor: "var(--color-surface)",
-  padding: "var(--spacing-8) 0",
+  padding: "var(--spacing-2) 0",
   textAlign: "center" as const,
   borderTop: "1px solid var(--color-border)",
   color: "var(--color-text-muted)",

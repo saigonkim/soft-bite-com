@@ -18,7 +18,7 @@ CREATE TABLE public.recipes (
 CREATE TABLE public.comments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID, -- Assuming we might have a users table later, or just simple UUID for now
-    recipe_id UUID NOT NULL REFERENCES public.recipes(id) ON DELETE CASCADE,
+    recipe_id TEXT NOT NULL,
     thickener_ratio TEXT,
     custom_tip TEXT,
     tags TEXT[],
