@@ -52,24 +52,9 @@
   --radius-full: 9999px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-background: #FFFFFF;
-    --color-surface: #F8FAFC;
-    --color-surface-hover: #F1F5F9;
-    
-    --color-text-primary: #0F172A;
-    --color-text-secondary: #334155;
-    --color-text-muted: #64748B;
-    
-    --color-border: #E2E8F0;
-    
-    --color-primary: #2563EB;
-    --color-secondary: #059669;
-    --color-accent: #DC2626;
-    --color-primary-light: #DBEAFE;
-  }
-}
+  --color-border: #334155;
+  
+  /* Typography - Silver Friendly */
 
 html,
 body {

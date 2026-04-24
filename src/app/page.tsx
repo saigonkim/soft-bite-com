@@ -9,15 +9,15 @@ export default function Home() {
       </p>
       
       <div style={{
-        backgroundColor: "var(--color-primary-light)",
-        color: "#111827", /* 강제로 어두운 색상 지정 */
+        backgroundColor: "var(--color-surface)",
+        color: "var(--color-text-primary)",
         padding: "var(--spacing-6)",
         borderRadius: "var(--radius-lg)",
         marginBottom: "var(--spacing-8)",
-        border: "2px solid var(--color-primary)"
+        border: "1px solid var(--color-border)"
       }}>
-        <h2 style={{ color: "#111827" }}>내게 맞는 식사 단계 찾기</h2>
-        <p style={{ color: "#374151" }}>현재 삼킴 상태에 맞는 IDDSI 단계를 확인해보세요.</p>
+        <h2 style={{ color: "var(--color-primary)" }}>내게 맞는 식사 단계 찾기</h2>
+        <p style={{ color: "var(--color-text-secondary)" }}>현재 삼킴 상태에 맞는 IDDSI 단계를 확인해보세요.</p>
         <Link href="/diagnosis" style={{
           display: "inline-block",
           backgroundColor: "var(--color-primary)",
