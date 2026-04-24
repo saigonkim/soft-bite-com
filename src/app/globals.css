@@ -1,23 +1,23 @@
 :root {
-  /* Colors - High Contrast */
-  --color-primary: #1D4ED8; /* High contrast blue */
-  --color-primary-light: #DBEAFE;
-  --color-primary-dark: #1E3A8A;
+  /* Colors - Sophisticated Dark Theme (Default) */
+  --color-primary: #3B82F6; 
+  --color-primary-light: rgba(59, 130, 246, 0.15);
+  --color-primary-dark: #1D4ED8;
   
-  --color-secondary: #047857; /* High contrast green */
-  --color-accent: #B91C1C; /* High contrast red */
+  --color-secondary: #10B981;
+  --color-accent: #EF4444;
   
-  --color-background: #FFFFFF;
-  --color-surface: #F3F4F6;
-  --color-surface-hover: #E5E7EB;
+  --color-background: #0F172A; /* Deeper, more sophisticated slate-dark */
+  --color-surface: #1E293B;
+  --color-surface-hover: #334155;
   
-  --color-text-primary: #111827; /* Darkest gray for high contrast */
-  --color-text-secondary: #374151;
-  --color-text-muted: #6B7280;
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #94A3B8;
   
-  --color-border: #D1D5DB;
+  --color-border: #334155;
   
-  /* Typography - Silver Friendly (Base font size >= 18px equivalent) */
+  /* Typography - Silver Friendly */
   --font-family-base: 'Inter', 'Noto Sans KR', sans-serif;
   
   /* 
@@ -52,22 +52,22 @@
   --radius-full: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --color-background: #111827;
-    --color-surface: #1F2937;
-    --color-surface-hover: #374151;
+    --color-background: #FFFFFF;
+    --color-surface: #F8FAFC;
+    --color-surface-hover: #F1F5F9;
     
-    --color-text-primary: #F9FAFB;
-    --color-text-secondary: #E5E7EB;
-    --color-text-muted: #9CA3AF;
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #334155;
+    --color-text-muted: #64748B;
     
-    --color-border: #4B5563;
+    --color-border: #E2E8F0;
     
-    /* Using slightly less saturated colors for dark mode to reduce eye strain */
-    --color-primary: #3B82F6;
-    --color-secondary: #10B981;
-    --color-accent: #EF4444;
+    --color-primary: #2563EB;
+    --color-secondary: #059669;
+    --color-accent: #DC2626;
+    --color-primary-light: #DBEAFE;
   }
 }
 
