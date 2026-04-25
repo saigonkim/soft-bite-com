@@ -100,7 +100,7 @@ export default function DiagnosisPage() {
           <p style={{ fontSize: "var(--font-size-lg)", color: "var(--color-text-primary)", fontWeight: "bold", marginBottom: "var(--spacing-4)" }}>
             {result.description}
           </p>
-          <div style={{ backgroundColor: "var(--color-primary-light)", color: "#1E3A8A", padding: "var(--spacing-4)", borderRadius: "var(--radius-md)", textAlign: "left" as const }}>
+          <div style={{ backgroundColor: "var(--color-surface-hover)", color: "var(--color-text-primary)", padding: "var(--spacing-4)", borderRadius: "var(--radius-md)", textAlign: "left" as const, border: "1px solid var(--color-border)" }}>
             💡 <strong>관리 팁:</strong> {result.detail}
           </div>
         </div>
@@ -158,7 +158,7 @@ export default function DiagnosisPage() {
         border: "1px solid var(--color-border)"
       }}>
         <div style={{ marginBottom: "var(--spacing-6)" }}>
-          <span style={{ display: "inline-block", backgroundColor: "var(--color-primary-light)", color: "#1E3A8A", padding: "4px 12px", borderRadius: "var(--radius-full)", fontWeight: "bold", marginBottom: "var(--spacing-4)" }}>
+          <span style={{ display: "inline-block", backgroundColor: "var(--color-primary)", color: "white", padding: "4px 12px", borderRadius: "var(--radius-full)", fontWeight: "bold", marginBottom: "var(--spacing-4)", fontSize: "var(--font-size-sm)" }}>
             질문 {currentStep + 1} / {questions.length}
           </span>
           <h2 style={{ fontSize: "var(--font-size-xl)", marginBottom: "var(--spacing-2)", color: "var(--color-text-primary)" }}>{question.title}</h2>
