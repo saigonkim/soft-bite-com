@@ -5,28 +5,29 @@ export default function Home() {
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-10)" }}>
       {/* Hero Section */}
       <section style={{
-        padding: "var(--spacing-12) var(--spacing-6)",
+        padding: "var(--spacing-8) var(--spacing-6)",
         background: "linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%)",
         borderRadius: "var(--radius-lg)",
         textAlign: "center" as const,
         border: "1px solid var(--color-border)",
         boxShadow: "var(--shadow-lg)"
       }}>
-        <h1 style={{ 
+        <h1 className="keep-all" style={{ 
           fontSize: "var(--font-size-3xl)", 
           marginBottom: "var(--spacing-4)",
           background: "linear-gradient(90deg, var(--color-primary) 0%, #60A5FA 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
-          fontWeight: "800"
+          fontWeight: "800",
+          lineHeight: "1.3"
         }}>
           다시 찾는 식사의 즐거움,<br />든든한 한입
         </h1>
-        <p style={{ 
+        <p className="keep-all" style={{ 
           fontSize: "var(--font-size-xl)", 
           color: "var(--color-text-secondary)", 
           maxWidth: "600px", 
-          margin: "0 auto var(--spacing-8)",
+          margin: "0 auto",
           lineHeight: "1.6"
         }}>
           구강암 환우분들이 씹고 삼키는 걱정 없이,<br /> 
