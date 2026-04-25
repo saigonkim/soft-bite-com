@@ -107,14 +107,14 @@ h3 { font-size: var(--font-size-xl); }
 
 /* Main Content Layout */
 .mainContent {
-  padding: 0 var(--spacing-4) var(--spacing-4); /* Removed top padding */
+  padding: 0 var(--spacing-4) var(--spacing-4);
   min-height: 80vh;
-  margin-top: 50px; /* Reduced from 60px */
+  margin-top: 80px; /* Increased back for PC spaciousness */
 }
 
 @media (max-width: 768px) {
   .mainContent {
-    margin-top: 80px; /* Reduced from 100px */
+    margin-top: 65px; /* Further reduced for Mobile tightness */
   }
 }
 
