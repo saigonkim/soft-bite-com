@@ -56,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'var(--color-background)' }}>
       {/* Admin Header */}
-      <header style={{ backgroundColor: 'var(--color-surface)', borderBottom: '2px solid var(--color-primary)', padding: 'var(--spacing-4) var(--spacing-6)', sticky: 'top', zIndex: 1100 }}>
+      <header style={{ backgroundColor: 'var(--color-surface)', borderBottom: '2px solid var(--color-primary)', padding: 'var(--spacing-4) var(--spacing-6)', position: 'sticky', top: 0, zIndex: 1100 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: '800', color: 'var(--color-primary)', margin: 0 }}>
             Soft-Bite Admin <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', fontWeight: 'normal' }}>v1.0</span>
