@@ -25,7 +25,8 @@ export default function AdminTipsPage() {
     setLoading(true);
     const { data } = await supabase
       .from('comments')
-      .not('thickener_ratio', 'is', null)
+      .select('*')
+      .filter('thickener_ratio', 'not.is', null)
       .order('created_at', { ascending: false });
 
     if (data) setTips(data);
