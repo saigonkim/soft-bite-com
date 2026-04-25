@@ -114,7 +114,7 @@ h3 { font-size: var(--font-size-xl); }
 
 @media (max-width: 768px) {
   .mainContent {
-    margin-top: 65px; /* Further reduced for Mobile tightness */
+    margin-top: 50px; /* Reduced further to 50px as requested */
   }
 }
 
