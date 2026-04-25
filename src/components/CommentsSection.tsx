@@ -12,6 +12,7 @@ type Comment = {
   custom_tip: string;
   tags: string[];
   created_at: string;
+  is_hidden: boolean;
 };
 
 export default function CommentsSection({ recipeId }: { recipeId: string }) {
@@ -44,6 +45,7 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
       .from('comments')
       .select('*')
       .eq('recipe_id', recipeId)
+      .eq('is_hidden', false)
       .order('created_at', { ascending: false });
 
     if (error) {

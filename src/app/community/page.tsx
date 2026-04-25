@@ -11,6 +11,7 @@ type Comment = {
   author: string;
   content: string;
   created_at: string;
+  is_hidden: boolean;
 };
 
 type Post = {
@@ -20,6 +21,7 @@ type Post = {
   content: string;
   likes: number;
   created_at: string;
+  is_hidden: boolean;
   comments?: Comment[];
 };
 
@@ -67,6 +69,7 @@ function PostItem({ post, onUpdate, user }: { post: Post, onUpdate: () => void, 
       .from('community_comments')
       .select('*')
       .eq('post_id', post.id)
+      .eq('is_hidden', false)
       .order('created_at', { ascending: true });
     
     if (data) setComments(data);
@@ -238,6 +241,7 @@ export default function CommunityPage() {
     const { data, error } = await supabase
       .from('community_posts')
       .select('*')
+      .eq('is_hidden', false)
       .order('created_at', { ascending: false })
       .order('id', { ascending: false });
 

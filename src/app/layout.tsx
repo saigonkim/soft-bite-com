@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Header from "@/components/Header";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,19 +41,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body>
-        <header className="header">
-          <div className="container headerContainer">
-            <Link href="/" className="logo">
-              든든한 한입
-            </Link>
-            <nav className="nav">
-              <Link href="/recipes" className="navLink">단계별 레시피</Link>
-              <Link href="/guide" className="navLink">식재료 가이드</Link>
-              <Link href="/community" className="navLink">환우 커뮤니티</Link>
-              <Link href="/mykitchen" className="navLink">마이 키친</Link>
-            </nav>
-          </div>
-        </header>
+        <Header />
         <main className="container mainContent">
           {children}
         </main>
