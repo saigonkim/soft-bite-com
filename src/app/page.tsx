@@ -5,7 +5,7 @@ export default function Home() {
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-10)" }}>
       {/* Hero Section */}
       <section style={{
-        padding: "var(--spacing-8) var(--spacing-6)",
+        padding: "var(--spacing-4) var(--spacing-6) var(--spacing-8)", /* Reduced top padding from spacing-8 to spacing-4 */
         background: "linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%)",
         borderRadius: "var(--radius-lg)",
         textAlign: "center" as const,

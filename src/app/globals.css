@@ -114,7 +114,7 @@ h3 { font-size: var(--font-size-xl); }
 
 @media (max-width: 768px) {
   .mainContent {
-    margin-top: 50px; /* Reduced further to 50px as requested */
+    margin-top: 30px; /* Force it up significantly */
   }
 }
 
@@ -184,7 +184,7 @@ h3 { font-size: var(--font-size-xl); }
 
   .headerContainer {
     flex-direction: column;
-    gap: var(--spacing-2);
+    gap: 0px; /* Tighter header for mobile */
     align-items: flex-start;
   }
 
